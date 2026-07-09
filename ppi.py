@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 tqdm.pandas(leave = False)
 
 from transformers import (
@@ -143,7 +143,6 @@ def main():
                 whole_cdr = row["cdr_mask_aa_heavy"] + "00" + row["cdr_mask_aa_light"]
                 seq_id = row["sequence_id"]
                 donor = row["donor"]
-                print("working")
                 d = infer_and_group_stats(
                     model, 
                     tokenizer,
