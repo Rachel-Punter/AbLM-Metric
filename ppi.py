@@ -24,7 +24,6 @@ from condensed_blosum_metric import find_all_scores
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 device
-!pwd
 
 def infer_and_group_stats(model, tokenizer, seq, cdr, sequence_id, donor_id):
     losses = []
@@ -129,36 +128,36 @@ def main():
     data_dict = {"germline": germline_test_df, "mutated": mutated_test_df}
 
     for name, model_path in model_dict.items():
-    for seq_type, data in data_dict.items():
+        for seq_type, data in data_dict.items():
     
-        model = EsmForMaskedLM.from_pretrained(model_path).to(device)
-    
-        inference_data = []
-        sequences = list(data.iterrows())
-    
-        for _id, row in tqdm(sequences):
-            whole_seq = row['sequence_aa_heavy'] + "<cls><cls>" + row["sequence_aa_light"]
-            whole_cdr = row["cdr_mask_aa_heavy"] + "00" + row["cdr_mask_aa_light"]
-            seq_id = row["sequence_id"]
-            donor = row["donor"]
-            
-            d = infer_and_group_stats(
-                model, 
-                tokenizer,
-                #row["text"],
-                #row["cdr_mask"]
-                whole_seq, 
-                whole_cdr,
-                seq_id,
-                donor
-            )
-            inference_data.append(d)
+            model = EsmForMaskedLM.from_pretrained(model_path).to(device)
+        
+            inference_data = []
+            sequences = list(data.iterrows())
+        
+            for _id, row in tqdm(sequences):
+                whole_seq = row['sequence_aa_heavy'] + "<cls><cls>" + row["sequence_aa_light"]
+                whole_cdr = row["cdr_mask_aa_heavy"] + "00" + row["cdr_mask_aa_light"]
+                seq_id = row["sequence_id"]
+                donor = row["donor"]
+                
+                d = infer_and_group_stats(
+                    model, 
+                    tokenizer,
+                    #row["text"],
+                    #row["cdr_mask"]
+                    whole_seq, 
+                    whole_cdr,
+                    seq_id,
+                    donor
+                )
+                inference_data.append(d)
+                inference_df = pd.DataFrame(inference_data)
+      
             inference_df = pd.DataFrame(inference_data)
-  
-        inference_df = pd.DataFrame(inference_data)
-        inference_df.to_parquet(f"./results/{name}_{seq_type}_{len(inference_data)}.parquet")
+            inference_df.to_parquet(f"./results/{name}_{seq_type}_{len(inference_data)}.parquet")
 
-inference_df
+    inference_df
 
 if __name__ == "__main__":
     main()
