@@ -23,7 +23,7 @@ from condensed_blosum_metric import new_blosum62
 from condensed_blosum_metric import find_all_scores
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-device
+# device
 
 def infer_and_group_stats(model, tokenizer, seq, cdr, sequence_id, donor_id):
     losses = []
@@ -125,7 +125,10 @@ def main():
 
     germline_test_df = pd.read_csv("unmutated_donors-combined.csv", dtype=str)
     mutated_test_df = pd.read_csv("mutated_donors-combined.csv", dtype=str)
-    data_dict = {"germline": germline_test_df, "mutated": mutated_test_df}
+    data_dict = {
+        "germline": germline_test_df, 
+        "mutated": mutated_test_df
+    }
 
     for name, model_path in model_dict.items():
         for seq_type, data in data_dict.items():
@@ -140,7 +143,7 @@ def main():
                 whole_cdr = row["cdr_mask_aa_heavy"] + "00" + row["cdr_mask_aa_light"]
                 seq_id = row["sequence_id"]
                 donor = row["donor"]
-                
+                print("working")
                 d = infer_and_group_stats(
                     model, 
                     tokenizer,
@@ -151,13 +154,11 @@ def main():
                     seq_id,
                     donor
                 )
+                
                 inference_data.append(d)
-                inference_df = pd.DataFrame(inference_data)
       
             inference_df = pd.DataFrame(inference_data)
-            inference_df.to_parquet(f"./results/{name}_{seq_type}_{len(inference_data)}.parquet")
-
-    inference_df
+        inference_df.to_parquet(f"./results/{name}_{seq_type}_{len(inference_data)}.parquet")
 
 if __name__ == "__main__":
     main()
