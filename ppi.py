@@ -118,7 +118,7 @@ def main():
     "35M-F": "brineylab/35M_full_checkpoint-500000",
     "150M-F": "brineylab/150M_full_checkpoint-500000",
     "350M-F": "brineylab/350M_full_checkpoint-500000",
-    "650M-F": "brineylab/650M_full_checkpoint-39500000"
+    "650M-F": "brineylab/650M_full_checkpoint-395000"
     }
 
     tokenizer = EsmTokenizer.from_pretrained("facebook/esm2_t30_150M_UR50D")
@@ -157,7 +157,7 @@ def main():
                 inference_data.append(d)
       
             inference_df = pd.DataFrame(inference_data)
-        inference_df.to_parquet(f"./results/{name}_{seq_type}_{len(inference_data)}.parquet")
+            inference_df.to_parquet(f"./results/{name}_{seq_type}_{len(inference_data)}.parquet")
 
 if __name__ == "__main__":
     main()
