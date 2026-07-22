@@ -1,2 +1,11 @@
 __pycache__/
 .ipynb_checkpoints
+vscode_cli.tar.gz
+code
+unmutated_donors-combined.csv
+mutated_donors-combined.csv
+results
+results/*
+*.parquet
+parquet_results
+parquet_results/*
